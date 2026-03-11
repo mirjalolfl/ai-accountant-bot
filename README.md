@@ -1,21 +1,78 @@
-# AI Accountant Telegram Bot
+# 🤖 AI Buxgalter Bot
 
-Bu Mirjalol uchun maxsus yaratilgan aqlli shaxsiy AI buxalter Telegram boti.
+Telegram orqali ishlaydigan shaxsiy AI buxgalter. Claude AI yordamida qarzlar va xarajatlarni boshqaradi.
 
-## Texnologiyalar
-- **AI Miyyasi**: Claude 3.5 Sonnet (Anthropic API)
-- **Telegram Framework**: Telegraf.js
-- **Ma'lumotlar bazasi**: Firebase Firestore
-- **Deploy**: Vercel (Serverless Functions)
+## ✨ Imkoniyatlar
 
-## Sozlash (Environment Variables)
-Vercel'da quyidagi o'zgaruvchilarni qo'shing:
-- `CLAUDE_API_KEY`: Anthropic API kaliti
-- `TELEGRAM_BOT_TOKEN`: Telegram Bot tokeni
-- `FIREBASE_PROJECT_ID`: Firebase loyiha ID
-- `FIREBASE_CLIENT_EMAIL`: Firebase service account email
-- `FIREBASE_PRIVATE_KEY`: Firebase service account private key
+- 💰 **Qarz boshqaruvi** — Olgan/bergan qarzlarni yozib borish
+- 📝 **Xarajat kuzatish** — Kundalik xarajatlarni kategoriya bo'yicha saqlash
+- ⏰ **Muddati eslatmasi** — O'tgan va yaqinlashgan qarzlar haqida ogohlantirish
+- 📊 **Hisobotlar** — Moliyaviy holat tahlili
+- 🧠 **Aqlli suhbat** — Oddiy tilda gapiring, bot tushunadi
 
-## Webhook o'rnatish
-Deploy qilganingizdan so'ng, quyidagi URL'ga brauzer orqali kiring:
-`https://api.telegram.org/bot<TOKEN>/setWebhook?url=<VERCEL_URL>`
+## 🏗 Texnologiyalar
+
+| Qatlam | Texnologiya |
+|--------|------------|
+| Bot | Telegram Bot API |
+| Backend | Next.js API Routes |
+| AI | Claude API (Anthropic) |
+| DB | Firebase Firestore |
+| Hosting | Vercel |
+| Til | TypeScript |
+
+## 📁 Tuzilma
+
+```
+├── pages/api/webhook.ts   ← Telegram webhook
+├── lib/
+│   ├── claude.ts          ← Claude AI + 10 ta tool
+│   ├── firebase.ts        ← Firebase Admin SDK
+│   └── userStore.ts       ← Firestore CRUD
+├── types/index.ts         ← TypeScript turlari
+├── scripts/setup-webhook.js
+└── .env.example
+```
+
+## 🚀 O'rnatish
+
+### 1. Telegram bot
+[@BotFather](https://t.me/BotFather) → `/newbot` → tokenni saqlang
+
+### 2. Firebase
+Firebase Console → Firestore yarating → Service Account JSON yuklab oling
+
+### 3. Vercel deploy
+```bash
+npm install
+vercel
+```
+
+**Environment Variables** (Vercel dashboard):
+```
+TELEGRAM_BOT_TOKEN
+TELEGRAM_WEBHOOK_SECRET
+ANTHROPIC_API_KEY
+FIREBASE_SERVICE_ACCOUNT_JSON
+```
+
+### 4. Webhook o'rnatish
+```bash
+node scripts/setup-webhook.js https://YOUR-APP.vercel.app
+```
+
+## 💬 Foydalanish
+
+```
+"Akadan 500,000 so'm qarz oldim"
+"Sherzodga 1 mln berdim, oydan keyin qaytaradi"
+"Qarzlarimni ko'rsat"
+"Bugun taomga 85,000 sarfladim"
+"Moliyaviy holatimni ko'rsat"
+```
+
+## Buyruqlar
+`/start` `/summary` `/debts` `/expenses` `/help` `/clear`
+
+---
+Mirjalol Hasanov tomonidan yaratilgan 🇺🇿
