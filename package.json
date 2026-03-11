@@ -1,20 +1,27 @@
 {
   "name": "ai-accountant-bot",
   "version": "1.0.0",
-  "description": "AI Accountant Telegram Bot using Claude API and Firebase",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.36.3",
-    "axios": "^1.7.9",
-    "dotenv": "^16.4.7",
-    "firebase-admin": "^13.1.0",
-    "telegraf": "^4.16.3"
+    "@anthropic-ai/sdk": "^0.39.0",
+    "firebase-admin": "^12.0.0",
+    "next": "^14.2.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "@types/node": "^20.0.0",
+    "@types/node-telegram-bot-api": "^0.64.0",
+    "@types/react": "^18.3.0",
+    "@types/uuid": "^9.0.0",
+    "typescript": "^5.4.0"
   }
 }
