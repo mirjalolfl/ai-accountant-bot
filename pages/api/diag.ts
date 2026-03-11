@@ -6,7 +6,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
 
   // 1. Env variables
   results.TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN ? "✅ bor" : "❌ YO'Q";
-  results.OPENAI_API_KEY = process.env.OPENAI_API_KEY ? "✅ bor" : "❌ YO'Q";
+  results.GEMINI_API_KEY = process.env.GEMINI_API_KEY ? "✅ bor" : "❌ YO'Q";
   results.FIREBASE_SERVICE_ACCOUNT_JSON = process.env.FIREBASE_SERVICE_ACCOUNT_JSON ? "✅ bor" : "❌ YO'Q";
 
   // 2. Firebase JSON parse
@@ -32,18 +32,21 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     results.firebase_firestore = "❌ FIREBASE: " + String(e);
   }
 
-  // 4. OpenAI API
+  // 4. Gemini API
   try {
     const OpenAI = (await import("openai")).default;
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
+    const client = new OpenAI({ 
+      baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+      apiKey: process.env.GEMINI_API_KEY! 
+    });
     const resp = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gemini-2.5-flash",
       max_tokens: 5,
       messages: [{ role: "user", content: "ping" }],
     });
-    results.openai_api = "✅ GPT ishladi: " + (resp.choices[0]?.message?.content || "ok");
+    results.gemini_api = "✅ Gemini ishladi: " + (resp.choices[0]?.message?.content || "ok");
   } catch (e) {
-    results.openai_api = "❌ OPENAI: " + String(e);
+    results.gemini_api = "❌ GEMINI: " + String(e);
   }
 
   return res.status(200).json(results);
