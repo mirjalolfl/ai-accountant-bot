@@ -36,7 +36,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
   const variations = [
     { name: "documented", base: "https://generativelanguage.googleapis.com/v1beta/openai/", model: "gemini-1.5-flash" },
     { name: "no-slash", base: "https://generativelanguage.googleapis.com/v1beta/openai", model: "gemini-1.5-flash" },
-    { name: "models-prefix", base: "https://generativelanguage.googleapis.com/v1beta/openai/", model: "models/gemini-1.5-flash" },
+    { name: "v1", base: "https://generativelanguage.googleapis.com/v1/openai/", model: "gemini-1.5-flash" },
   ];
 
   for (const v of variations) {
@@ -55,6 +55,25 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     } catch (e) {
       results[`gemini_${v.name}`] = "❌ ERROR: " + String(e);
     }
+  }
+
+  // 5. Native Gemini Test (Simple Fetch)
+  try {
+    const fetch = (await import("node-fetch")).default || global.fetch;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: "ping" }] }] })
+    });
+    const data = await resp.json();
+    if (resp.ok) {
+      results.gemini_native = "✅ OK: " + (data.candidates?.[0]?.content?.parts?.[0]?.text || "ok");
+    } else {
+      results.gemini_native = `❌ ERROR ${resp.status}: ` + JSON.stringify(data);
+    }
+  } catch (e) {
+    results.gemini_native = "❌ ERROR: " + String(e);
   }
 
   return res.status(200).json(results);
