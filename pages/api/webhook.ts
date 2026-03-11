@@ -55,6 +55,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const message = req.body?.message;
 
+  // Faqat shaxsiy suhbatda ishlash (Privacy uchun)
+  if (message.chat.type !== "private") {
+    await sendTelegramMessage(
+      message.chat.id,
+      "🛡 <b>Xavfsizlik ogohlantirishi:</b>\n\nMen sizning shaxsiy AI buxgalteringizman. Moliyaviy ma'lumotlaringiz xavfsizligi uchun meni faqat <b>shaxsiy chatda</b> ishlating.\n\nGuruhlarda ishlashim cheklangan. Iltimos, menga to'g'ridan-to'g'ri yozing: @shaxsiy_buxalter_bot" // Bot username'ini user o'zi qo'yadi, bu yerda misol
+    );
+    return res.status(200).json({ ok: true });
+  }
+
   // Matn bo'lmasa — darhol 200 qaytarish
   if (!message || !message.text) {
     return res.status(200).json({ ok: true });

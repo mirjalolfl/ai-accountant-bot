@@ -40,7 +40,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
       apiKey: process.env.GEMINI_API_KEY! 
     });
     const resp = await client.chat.completions.create({
-      model: "gemini-2.5-flash",
+      model: "gemini-1.5-flash",
       max_tokens: 5,
       messages: [{ role: "user", content: "ping" }],
     });
