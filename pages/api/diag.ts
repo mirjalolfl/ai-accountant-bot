@@ -37,6 +37,7 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     { name: "documented", base: "https://generativelanguage.googleapis.com/v1beta/openai/", model: "gemini-1.5-flash" },
     { name: "no-slash", base: "https://generativelanguage.googleapis.com/v1beta/openai", model: "gemini-1.5-flash" },
     { name: "v1", base: "https://generativelanguage.googleapis.com/v1/openai/", model: "gemini-1.5-flash" },
+    { name: "flash-latest", base: "https://generativelanguage.googleapis.com/v1beta/openai/", model: "gemini-1.5-flash-latest" },
   ];
 
   for (const v of variations) {
@@ -57,23 +58,34 @@ export default async function handler(_req: NextApiRequest, res: NextApiResponse
     }
   }
 
-  // 5. Native Gemini Test (Simple Fetch)
+  // 5. List Available Models
   try {
     const fetch = (await import("node-fetch")).default || global.fetch;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${process.env.GEMINI_API_KEY}`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (resp.ok) {
+      results.available_models = (data.models || []).map((m: any) => m.name.replace("models/", "")).join(", ");
+    } else {
+      results.available_models = `❌ ERROR ${resp.status}: ` + JSON.stringify(data);
+    }
+  } catch (e) {
+    results.available_models = "❌ ERROR: " + String(e);
+  }
+
+  // 6. Native Gemini Test (v1 check)
+  try {
+    const fetch = (await import("node-fetch")).default || global.fetch;
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
     const resp = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ parts: [{ text: "ping" }] }] })
     });
     const data = await resp.json();
-    if (resp.ok) {
-      results.gemini_native = "✅ OK: " + (data.candidates?.[0]?.content?.parts?.[0]?.text || "ok");
-    } else {
-      results.gemini_native = `❌ ERROR ${resp.status}: ` + JSON.stringify(data);
-    }
+    results.gemini_native_v1 = resp.ok ? "✅ OK" : `❌ ERROR ${resp.status}`;
   } catch (e) {
-    results.gemini_native = "❌ ERROR: " + String(e);
+    results.gemini_native_v1 = "❌ ERROR: " + String(e);
   }
 
   return res.status(200).json(results);
