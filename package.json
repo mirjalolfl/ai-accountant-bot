@@ -9,17 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0",
+    "openai": "^4.52.0",
     "firebase-admin": "^12.0.0",
     "next": "^14.2.0",
-    "node-telegram-bot-api": "^0.66.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "@types/node-telegram-bot-api": "^0.64.0",
     "@types/react": "^18.3.0",
     "@types/uuid": "^9.0.0",
     "typescript": "^5.4.0"
